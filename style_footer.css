@@ -1,0 +1,43 @@
+footer{
+    display: flex;
+    flex-direction: column;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    background-color: white;
+    color: rgb(206, 190, 160);
+    text-align: center;
+    margin-top: 100px;
+}
+
+.footeratas{
+    display: flex;
+    justify-content: space-between;
+}
+
+.footerbawah{
+    background-color: rgb(77, 39, 17);
+    color: white;
+}
+
+.footerkiri{
+    width: 30%;
+}
+
+.footertengah{
+    width: 30%;
+}
+
+.footerkanan{
+    width: 20%;
+    margin-right: 30px;
+}
+
+.footerkiri img{
+    width: 200px;
+}
+
+.fab{
+    cursor: pointer;
+}

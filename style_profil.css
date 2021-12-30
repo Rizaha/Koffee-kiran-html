@@ -1,0 +1,144 @@
+body{
+    margin: 0;
+    padding: 0;
+    background: url(background.jpg);
+}
+
+.containerprofile {
+    display: flex;
+    background-color: white;
+    box-shadow: 10px 10px 5px grey;
+    width: 1200px;
+    margin: 50px auto;
+    justify-content: space-between
+}
+
+.profilmenu{
+    width: 100%;
+    margin: 20px;
+}
+
+profil label{
+    font-size: 30px;
+    margin: 15px;
+    padding: 15px;
+}
+
+profil span{
+    font-size: 30px;
+    margin: 15px;
+    padding: 15px;
+    display: block;
+}
+
+.edit{
+    float: right;
+    display: block;
+}
+
+.selesai{
+    float: right;
+    display: none;
+    margin-right: 10px;
+}
+
+.canceledit{
+    float: right;
+    display: none;
+    
+}
+
+.garis{
+    display:none;
+}
+
+profil input[type=text]{
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    display: none;
+  }
+
+  /* The Modal (background) */
+  editprofile .modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    padding: 0px;
+  }
+  
+  /* Modal Content/Box */
+  editprofile .modal-content {
+    background-color: #fefefe;
+    margin: 5% auto 15% auto; /* 5% from the top, 15% from the bottom and centered */
+    border: 1px solid #888;
+    width: 50%; /* Could be more or less, depending on screen size */
+  }
+  
+  /* The Close Button (x) */
+  editprofile .close {
+    position: absolute;
+    right: 25px;
+    top: 0;
+    color: #000;
+    font-size: 35px;
+    font-weight: bold;
+  }
+  
+  editprofile .close:hover,
+  editprofile .close:focus {
+    color: red;
+    cursor: pointer;
+  }
+  
+  editprofile input[type=text], input[type=password], input[type=email] {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+  }
+
+  editprofile submit{
+    background-color: #b47133;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    font-size: 20px;
+}
+
+editprofile .cancelbtn{
+    color: white;
+    width: auto;
+    padding: 10px 18px;
+    background-color: #f44336;
+}
+  /* Add Zoom Animation */
+  .animate {
+    -webkit-animation: animatezoom 0.6s;
+    animation: animatezoom 0.6s
+  }
+  
+  @-webkit-keyframes animatezoom {
+    from {-webkit-transform: scale(0)} 
+    to {-webkit-transform: scale(1)}
+  }
+    
+  @keyframes animatezoom {
+    from {transform: scale(0)} 
+    to {transform: scale(1)}
+  }

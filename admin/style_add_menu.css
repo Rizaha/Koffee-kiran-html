@@ -1,0 +1,45 @@
+navmenu{
+    display: flex;
+    margin: 50px auto 10px auto;
+    width: 1000px;
+    flex-direction: column;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+navmenu input[type=text], select{
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+}
+
+submit{
+    background-color: rgb(110, 81, 43);
+    color: white;
+    padding: 7px;
+    cursor: pointer;
+    border-radius: 6px;
+    margin-right: 300px;
+    float: right;
+    font-size: 30px;
+}
+
+submit:hover{
+    background-color: grey;
+}
+
+.labeladd {
+    font-size: 40px;
+    margin: auto;
+}
+
+.menu{
+    margin: 10px;
+}
+
+form{
+    margin: 20px 0 0 0;
+}

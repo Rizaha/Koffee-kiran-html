@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link href="style_nav.css" rel="stylesheet">
+    <link rel="stylesheet" href="style_footer.css">
+    <link href="style_profil.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profil User</title>
+</head>
+
+<body>
+    <!-- navbar section start -->
+    <nav id="navbar"></nav>
+    <script type="text/javascript" src="navbar.js"></script>
+
+    <!-- login modals start -->
+    <nav id="login" class="modal"></nav>
+    <script type="text/javascript" src="navbar_login.js"></script>
+
+    <!-- daftar modal start -->
+    <nav id="daftar" class="modal"></nav>
+    <script type="text/javascript" src="navbar_daftar.js"></script>
+
+    <!-- login-daftar script start -->
+    <script type="text/javascript" src="login_register.js"></script>
+
+    <profil>
+        <div class="containerprofile">
+            <div class="profilmenu" id="profilmenu"></div>
+        </div>
+    </profil>
+
+    <editprofile id="edituname" class="modal">
+        <form class="modal-content animate" name="editForm" method="post">
+            <div class="imgcontainer">
+                <span onclick="clsdaf()" class="close" title="Close Modal">&times;</span>
+                <img src="edit.jpg" alt="Avatar" class="avatar">
+            </div>
+            <div class="container">
+                <label for="unamedit"><b>Username baru</b></label>
+                <input type="text" placeholder="Masukan Username baru.." id="editunames" name="editunames" required>
+
+
+                <label for="passedit"><b>Password baru</b></label>
+                <input type="password" placeholder="Masukan Password baru.." id="editpass" name="aditpass" required>
+
+
+
+                <submit type="button" onclick=" validasiedit(); upadateuname(); clsdaf()" id="done">Submit !</submit>
+
+            </div>
+            <div class="container" style="background-color: white;">
+                <button type="button" onclick="clsdaf()" class="cancelbtn">Cancel</button>
+            </div>
+        </form>
+    </editprofile>
+
+    <script>
+        async function getprofile() {
+            const auth = localStorage.getItem('auth')
+            console.log(auth)
+            const url = 'http://127.0.0.1:5000/coffeekiran/user/profile';
+            const resprofile = await fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'authorization': 'basic ' + auth
+                }
+            });
+
+            const profile = await resprofile.json();
+
+            if (resprofile.ok) {
+                const divprofile = document.querySelector('#profilmenu')
+                profile.forEach((item, index) => {
+                    divprofile.innerHTML += `<label for="nama">Nama :</label><br><br>
+                <span id="namaID">${item.name}</span>
+                <input type="text" placeholder="Masukan nama baru.." value="${item.name}" id="nprofil" name="nprofil" required>
+                <hr>
+
+                <label for="nama">Email :</label><br><br>
+                <span id="emailID">${item.email}</span>
+                <input type="text" placeholder="Masukan email baru.." value="${item.email}" id="eprofil" name="eprofil" required>
+                <hr>
+
+                <label for="nama">Kontak :</label><br><br>
+                <span id="contactID">${item.contact}</span>
+                <input type="text" placeholder="Contoh : 087xxxxxxx" value="${item.contact}" id="cprofil" name="cprofil" required>
+                <hr>
+
+                <label for="nama">Alamat :</label><br><br>
+                <span id="addressID">${item.addres}</span>
+                <input type="text" placeholder="Contoh : Jln. Pejuang...." value="${item.addres}" id="aprofil" name="aprofil" required>
+                <hr>
+                <br>
+                <br>
+                <button class="edituname" onclick="document.getElementById('edituname').style.display='block'">Edit Username dan Password</button>
+                <button class="edit" id="edits" onclick="editprofile()">Edit Profil</button>
+                <button class="canceledit" id="canceledit" onclick="editscancel()">Batal</button> 
+                <button class="selesai" type="submit" id="selesai" onclick="editsdone()">Selesai !</button> &nbsp;`;
+                });
+            }
+        }
+
+        getprofile();
+
+        function editprofile() {
+            document.getElementById('namaID').style.display = "none";
+            document.getElementById('emailID').style.display = "none";
+            document.getElementById('addressID').style.display = "none";
+            document.getElementById('contactID').style.display = "none";
+
+            document.getElementById('nprofil').style.display = "block";
+            document.getElementById('eprofil').style.display = "block";
+            document.getElementById('cprofil').style.display = "block";
+            document.getElementById('aprofil').style.display = "block";
+
+            document.getElementById('edits').style.display = "none";
+            document.getElementById('selesai').style.display = "block";
+            document.getElementById('canceledit').style.display = "block";
+        }
+
+        async function editsdone() {
+            const auth = localStorage.getItem('auth');
+            const nama = document.getElementById('nprofil').value;
+            const email = document.getElementById('eprofil').value;
+            const contact = document.getElementById('cprofil').value;
+            const addres = document.getElementById('aprofil').value;
+            console.log(auth, nama, email, contact, addres)
+
+            const urls = 'http://127.0.0.1:5000/coffeekiran/user/update-profile';
+            const resupdateprofile = await fetch(urls, {
+                method: 'POST',
+                body: JSON.stringify({
+                    'nama': nama,
+                    'email': email,
+                    'kontak': contact,
+                    'alamat': addres
+                }),
+                headers: {
+                    'Content-Type': 'application/json',
+                    'authorization': 'Basic ' + auth
+                }
+
+            });
+
+            const profile = await resupdateprofile.json();
+
+            alert('Profil telah diupdate!');
+
+            location.reload();
+
+            return profile
+        }
+
+        function editscancel() {
+            document.getElementById('namaID').style.display = "block";
+            document.getElementById('emailID').style.display = "block";
+            document.getElementById('addressID').style.display = "block";
+            document.getElementById('contactID').style.display = "block";
+
+            document.getElementById('nprofil').style.display = "none";
+            document.getElementById('eprofil').style.display = "none";
+            document.getElementById('cprofil').style.display = "none";
+            document.getElementById('aprofil').style.display = "none";
+
+            document.getElementById('edits').style.display = "block";
+            document.getElementById('selesai').style.display = "none";
+            document.getElementById('canceledit').style.display = "none";
+        }
+
+        function validasiedit() {
+            const username =
+                document.forms["editForm"]["editunames"];
+            const password =
+                document.forms["editForm"]["editpass"];
+
+            if (username.value == "") {
+                alert("Please enter your username.");
+                username.focus();
+                return false;
+            }
+
+            if (password.value == "") {
+                alert("Please enter your password");
+                password.focus();
+                return false;
+            }
+
+            return true;
+        }
+        async function upadateuname() {
+            if (validasiedit() == true) {
+                const username = document.getElementById('editunames').value;
+                const password = document.getElementById('editpass').value;
+                const auth = localStorage.getItem('auth');
+
+                console.log(username, password);
+
+                const res = await fetch('http://127.0.0.1:5000/coffeekiran/user/update-user', {
+                    method: 'PUT',
+                    body: JSON.stringify({
+                        'username': username,
+                        'password': password
+                    }),
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'authorization': 'basic ' + auth
+                    }
+                });
+                console.log(res.statusText);
+
+                const json = await res.json();
+                if (res.ok) {
+                    document.getElementById('edituname').style.display = 'none'
+                    alert('Akun telah diperbaharui !')
+                    localStorage.setItem('username', username)
+                    localStorage.setItem('auth', btoa(username + ':' + password))
+                    location.reload()
+                } else {
+                    alert('username sudah terdaftar')
+                }
+
+
+
+
+                return json
+            }
+        }
+    </script>
+
+    <!-- footer section-->
+    <footer id="footer"></footer>
+    <script src="footer.js"></script>
+    <script src="https://kit.fontawesome.com/65129717b0.js" crossorigin="anonymous"></script>
+</body>
+
+</html>

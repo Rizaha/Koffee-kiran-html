@@ -1,0 +1,98 @@
+body{
+    margin: 0;
+    padding: 0;
+    background: url(../background.jpg);
+}
+
+navmenu ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 10px 0;
+    width: 20%;
+    background-color: #f1f1f1;
+    position: fixed;
+    height: 100%;
+    overflow: auto;
+  }
+  
+navmenu li a {
+    display: block;
+    color: #000;
+    padding: 8px 16px;
+    text-decoration: none;
+    font-size: 50px;
+  }
+
+navmenu li a:hover:not(nav) {
+    background-color: #555;
+    color: white;
+  }
+
+navmenu input[type=text], select{
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+  }
+
+submit{
+    padding: 5px;
+    margin: 10px 0 50px 0;
+    float: left;
+    cursor: pointer;
+    background: rgb(223, 223, 223);
+    font-size: 30px;
+    color: black;
+    border-radius: 5px;
+}
+
+span{
+    font-size: 50px;
+}
+
+label{
+    padding: 0 0 0 20px;
+    font-size: 25px;
+}
+
+.container{
+    background: white;
+    box-shadow: 5px 5px 30px grey;
+    width: 1000px;
+
+}
+
+nav {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: white;
+    border-bottom: grey;
+    box-shadow: 10px 10px 5px grey;
+    
+    top: 0;
+}
+  
+nav li {
+    float: left;
+}
+  
+nav li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+nav li a img{
+    height: 50px;
+    padding-left: 350px;
+}
+
+.active {
+    background-color: #a7640e;
+}

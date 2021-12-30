@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link href="style_menu.css" rel="stylesheet">
+    <link href="style_nav.css" rel="stylesheet">
+    <link rel="stylesheet" href="style_footer.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <title>Halaman menu</title>
+</head>
+
+<body>
+    <!-- navbar section start -->
+    <nav id="navbar"></nav>
+    <script type="text/javascript" src="navbar.js"></script>
+
+    <!-- login modals start -->
+    <nav id="login" class="modal"></nav>
+    <script type="text/javascript" src="navbar_login.js"></script>
+
+    <!-- daftar modal start -->
+    <nav id="daftar" class="modal"></nav>
+    <script type="text/javascript" src="navbar_daftar.js"></script>
+
+    <!-- login-daftar script start -->
+    <script type="text/javascript" src="login_register.js"></script>
+
+
+    <!-- menu section start  -->
+    <menu>
+        <div class="row">
+            <div class="column left">
+                <div class="search-container">
+                    <form>
+                        <input type="text" placeholder="Search menu" name="search" id="cari">
+                        <button type="button" id="btncari"><i class="fa fa-search"></i></button>
+                    </form>
+                </div>
+                <ul>
+                    <li><a onclick="window.location.reload()">All</a></li>
+                    <li><a data-type=espresso onclick="loadDataType(this)">Espresso</a></li>
+                    <li><a data-type=machiato onclick="loadDataType(this)">Machiato</a></li>
+                    <li><a data-type=latte onclick="loadDataType(this)">Latte</a></li>
+                    <li><a data-type=americano onclick="loadDataType(this)">Americano</a></li>
+                </ul>
+            </div>
+            <div class="column right" id="content"></div>
+        </div>
+    </menu>
+    <!-- menu section end  -->
+
+    <!-- script section start  -->
+    <script>
+        // async function tampilan_menu(ini){
+        //         const type = ini.dataset.type;
+        //         if(type != null){
+        //             console.log(type);
+
+        //             const res = await fetch('http://127.0.0.1:5000/coffeekiran/get-type', {
+        //                 method: 'POST',
+        //                 headers: {
+        //                     'Content-Type': 'application/json'
+        //                 },
+        //                 body: JSON.stringify({
+        //                     'tipe': type
+        //                 })
+        //             });
+
+        //             const hasil = await res.json();
+
+        //             return hasil
+        //         }
+        //         else{
+        //             const search = document.getElementById('cari').value;
+        //             const urlparam = "http://127.0.0.1:5000/coffeekiran/search?menu=" + (search || "");
+        //             const res = await fetch(urlparam, {
+        //                 method: 'GET'
+        //             });
+        //             if (res.ok){
+        //                 const hasil = await res.json();
+        //                 console.log(hasil);
+        //                 return hasil;
+        //             }else{
+        //                 alert('Menu tidak ditemukan')
+        //             } 
+        //         }
+        // }
+
+        // function templete() {
+        //     const divtype = document.querySelector('div#content')
+        //     tampilan_menu().forEach((menu, index) => {
+        //         divtype.innerHTML += `<section class="items">
+        //     <div class="item" id="namamenu" value="${menu.menu_id}">
+        //     <img src="menu/gambar/${menu.gambar}">
+        //     <h2>${menu.nama}</h2><br>
+        //     <span>stok = ${menu.stok}</span><br>
+        //     <span>${menu.harga}</span><br>
+        //     <input type="number" id="quantity${menu.menu_id}" name="quantity" value="1" min="1" max="${menu.stok}">
+        //     <button type="submit" data-menu_id=${menu.menu_id} onclick="getpesan(this)" id="btnpesan${menu.menu_id}" >Pesan</button>
+        //     </div>
+        //     </section>`;
+        //     });
+        // }
+
+
+
+
+        document.getElementById('btncari').addEventListener('click', getcari);
+
+        function loadDataSearch(search) {
+            const element = document.querySelector("div#content");
+            getsearch(search).then(menus => {
+                const template = getTemplate(menus);
+
+                element.innerHTML = template;
+            });
+        }
+
+        async function getsearch(search) {
+
+            const urlparam = "http://127.0.0.1:5000/coffeekiran/search?menu=" + (search || "");
+            const res = await fetch(urlparam, {
+                method: 'GET'
+            });
+            if (res.ok) {
+                const hasil = await res.json();
+                console.log(hasil);
+                return hasil;
+            } else {
+                alert('Menu tidak ditemukan')
+            }
+
+        }
+
+        console.log(getsearch())
+
+        function getcari() {
+            const cari = document.getElementById('cari').value;
+            console.log(cari)
+            loadDataSearch(cari)
+        }
+
+        document.getElementById('btncari').addEventListener('click', getcari);
+
+        function getTemplate(menus) {
+            const rows = menus.map(menuToRowView).join("");
+            return `<section class="items">${rows}</section>`;
+        }
+
+        function menuToRowView(menu) {
+            return `<div class="item" id="namamenu" value="${menu.menu_id}">
+                <img src="menu/gambar/${menu.gambar}">
+                <h2>${menu.nama}</h2><br>
+                <span>stok = ${menu.stok}</span><br>
+                <span>${menu.harga}</span><br>
+                <input type="number" id="quantity${menu.menu_id}" name="quantity" value="1" min="1" max="${menu.stok}">
+                <button type="submit" data-menu_id=${menu.menu_id} onclick="getpesan(this)" id="btnpesan${menu.menu_id}" >Pesan</button>
+            </div>`;
+        }
+        const enabled = true;
+        function runfunction() {
+            if (enabled == true) {
+                getcari()
+            }
+        }
+        runfunction()
+        // loadDataSearch();
+
+        async function getpesan(sender) {
+            const id = sender.dataset.menu_id
+            const jumlah = document.getElementById('quantity' + id).value
+            const auth = localStorage.getItem('auth')
+
+            console.log(sender.dataset.menu_id)
+            console.log(document.getElementById('quantity' + id).value)
+            console.log(localStorage.getItem('auth'))
+            if (localStorage.getItem('auth') == null) {
+                document.getElementById('login').style.display = 'block'
+            } else {
+                const respesan = await fetch('http://127.0.0.1:5000/coffeekiran/user/pesan', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        'menu_id': id,
+                        'jumlah': jumlah
+                    }),
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'authorization': 'basic ' + auth
+                    }
+                });
+                console.log(respesan.statusText);
+
+                if(respesan.ok){
+                    
+                    const json = await respesan.json();
+    
+                    alert('Menu Sudah Ditambahkan Ke Keranjang')
+                } else{
+                    alert('Harap Cek Stock')
+                }
+                
+            }
+        }
+
+        async function getmenutype(ini) {
+            const type = ini.dataset.type;
+            console.log(type);
+
+            const restype = await fetch('http://127.0.0.1:5000/coffeekiran/get-type', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    'tipe': type
+                })
+            });
+
+            const gettype = await restype.json();
+
+            console.log(restype)
+
+            return gettype
+
+        }
+
+        function loadDataType(sender) {
+            const element = document.querySelector("div#content");
+            getmenutype(sender).then(menus => {
+                const template = getTemplate(menus);
+
+                element.innerHTML = template;
+            });
+        }
+
+            // if (restype.ok) {
+            //     const element = document.querySelector("div#content");
+            //     gettype.then(menus => {
+            //         const template = getTemplate(menus);
+
+            //         element.innerHTML = template;
+                // const divtype = document.querySelector('div#content')
+                // gettype.forEach((menu, index) => {
+                //     divtype.innerHTML += `<section class="items">
+                // <div class="item" id="namamenu" value="${menu.menu_id}">
+                // <img src="menu/gambar/${menu.gambar}">
+                // <h2>${menu.nama}</h2><br>
+                // <span>stok = ${menu.stok}</span><br>
+                // <span>${menu.harga}</span><br>
+                // <input type="number" id="quantity${menu.menu_id}" name="quantity" value="1" min="1" max="${menu.stok}">
+                // <button type="submit" data-menu_id=${menu.menu_id} onclick="getpesan(this)" id="btnpesan${menu.menu_id}" >Pesan</button>
+                // </div>
+                // </section>`;
+                // });
+            //     }
+            // }
+    </script>
+    <!-- script section end  -->
+
+    <!-- footer section-->
+    <footer id="footer"></footer>
+    <script src="footer.js"></script>
+    <script src="https://kit.fontawesome.com/65129717b0.js" crossorigin="anonymous"></script>
+</body>
+
+</html>

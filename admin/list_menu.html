@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="stylesheet" href="style_nav_admin.css">
+    <link rel="stylesheet" href="style_list_menu.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Menu</title>
+</head>
+
+<body>
+    <!-- navbar admin  -->
+    <nav id="navbar"></nav>
+    <script type="text/javascript" src="navbar_admin.js"></script>
+    <!-- script login logout  -->
+    <script type="text/javascript" src="script_login_logout.js"></script>
+
+    <list>
+        <div class="menus">
+            <table id="listmenu">
+                <tr>
+                    <th>Id</th>
+                    <th>Nama</th>
+                    <th>Deskripsi</th>
+                    <th>Tipe</th>
+                    <th>Harga</th>
+                    <th>Gambar</th>
+                    <th>Stok</th>
+                </tr>
+            </table>
+        </div>
+    </list>
+
+    <script>
+        async function getlist() {
+            const auth = localStorage.getItem('auth')
+            console.log(auth)
+            const url = 'http://127.0.0.1:5000/coffeekiran/menu';
+            const reslistmenu = await fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'authorization': 'basic ' + auth
+                }
+            });
+
+            const menu = await reslistmenu.json();
+            console.log(menu)
+
+            if (reslistmenu.ok) {
+                const divlist = document.querySelector('table#listmenu')
+                menu.forEach((item, index) => {
+                    divlist.innerHTML += `<tr>
+                            <td>${item.id}</td>
+                            <td>${item.nama}</td>
+                            <td class="des">${item.deskripsi}</td>
+                            <td>${item.tipe}</td>
+                            <td>${item.harga}</td>
+                            <td><img src="../menu/gambar/${item.gambar}"></td>
+                            <td><input class="quantity" type="number" id="quantity${item.id}" value="${item.stok}"> <button><i class="fa fa-pencil" data-menu_id=${item.id} onclick="geteditstock(this)"></button></i></td>
+                            <td><button onclick="location.assign('edit_menu.html');localStorage.setItem('menu',${item.id})">Edit Menu !</button></td>
+                            </tr>`;
+                });
+            }
+        }
+        getlist();
+
+        async function geteditstock(sender) {
+            const id = sender.dataset.menu_id;
+            const stock = document.getElementById('quantity'+id).value;
+
+            console.log(id,stock)
+
+            const res = await fetch('http://127.0.0.1:5000/coffeekiran/admin/update-stock', {
+                method: 'PUT',
+                body: JSON.stringify({
+                    'menu_id': id,
+                    'stok': stock
+                }),
+                headers: {
+                    'Content-Type': 'application/json',
+                    'authorization': 'basic ' + localStorage.getItem('auth')
+                }
+            });
+            console.log(res.statusText);
+
+            const json = await res.json();
+
+            alert('Stock Telah Diperbaharui !');
+            location.reload();
+
+            return json
+        }
+    </script>
+</body>
+
+</html>

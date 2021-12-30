@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="stylesheet" href="style_nav_admin.css">
+    <link rel="stylesheet" href="style_edit.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Menu</title>
+</head>
+
+<body>
+   <!-- navbar admin  -->
+   <nav id="navbar"></nav>
+   <script type="text/javascript" src="navbar_admin.js"></script>
+   <!-- script login logout  -->
+   <script type="text/javascript" src="script_login_logout.js"></script>
+
+    <!-- nav menu start  -->
+    <editmenu>
+        <span class="labeledit">Perbaharui Data Menu <hr></span>
+        <div class="container">
+            <div id="kiri"></div>
+            <form class="back" id="editmenu" name="addmenu">
+                <label for="lname">Nama :</label><br>
+                <input type="text" placeholder="Masukan nama baru menu.." id="nmenu" name="nmenu" required><br>
+                <label for="lname">Deskripsi :</label><br>
+                <input type="text" placeholder="Masukan deskripsi menu.." id="dmenu" name="dmenu" required><br>
+                <label for="lname">Harga:</label><br>
+                <input type="text" placeholder="Masukan harga menu.." id="hmenu" name="hmenu" required><br>
+                <label for="lname">Tipe:</label><br>
+                <input type="text" placeholder="Masukan tipe menu.." id="tmenu" name="tmenu" required><br>
+                <label for="lname">Gambar:</label><br>
+                <input type="text" placeholder="Masukan link gambar menu.." id="gmenu" name="gmenu" required><br><br>
+
+                <submit type="button" onclick="validasi(); addmenus()">Edit !</submit>
+            </form>
+        </div>
+        
+    </editmenu>
+    <button class="menulain" onclick="location.assign('list_menu.html')">Perbaharui Menu Lain</button>
+    
+    
+
+    <!-- sript add menu start  -->
+    <script>
+        function loadData() {
+            const element = document.querySelector("div#kiri");
+
+            getmenu().then(menus => {
+                const template = getTemplate(menus);
+
+                element.innerHTML = template;
+            });
+        }
+
+        async function getmenu() {
+            const id = localStorage.getItem('menu');
+            const auth = localStorage.getItem('auth');
+            const url = "http://127.0.0.1:5000/coffeekiran/get_menu";
+            const response = await fetch(url,{
+                method : "POST",
+                body : JSON.stringify({
+                    "id" : id
+                }),
+                headers: {
+                    'Content-Type': 'application/json',
+                    'authorization': 'Basic ' + auth
+                }
+            });
+
+            return await response.json();
+        }
+        console.log(getmenu())
+
+        function getTemplate(menus) {
+            const rows = menus.map(menuToRowView).join("");
+
+            return `${rows}`;
+        }
+
+        function menuToRowView(menu) {
+            return `<img src="../menu/gambar/${menu.gambar}"><br>
+                    <span class="namamenu">${menu.nama}</span>`;
+        }
+
+        loadData();
+    </script>
+
+    <script>
+        // regist section start
+
+        function validasi() {
+            const nama =
+                document.forms["addmenu"]["nmenu"];
+            const deskripsi =
+                document.forms["addmenu"]["dmenu"];
+            const harga =
+                document.forms["addmenu"]["hmenu"];
+            const gambar =
+                document.forms["addmenu"]["gmenu"];
+
+            if (nama.value == "") {
+                alert("Please enter menus name.");
+                nama.focus();
+                return false;
+            }
+
+            if (deskripsi.value == "") {
+                alert("Please enter menu's descript");
+                deskripsi.focus();
+                return false;
+            }
+
+            if (harga.value == "") {
+                alert("Please enter menu's price");
+                harga.focus();
+                return false;
+            }
+
+            if (gambar.value == "") {
+                alert("Please enter menu's picture");
+                gambar.focus();
+                return false;
+            }
+
+            return true;
+        }
+
+        async function addmenus() {
+            if (validasi() == true) {
+                const nama = document.getElementById('nmenu').value;
+                const deskripsi = document.getElementById('dmenu').value;
+                const harga = document.getElementById('hmenu').value;
+                const gambar = document.getElementById('gmenu').value;
+                const tipe = document.getElementById('tmenu').value;
+                const id = localStorage.getItem('menu');
+
+
+                console.log(nama, deskripsi, harga, gambar);
+
+                const res = await fetch('http://127.0.0.1:5000/coffeekiran/admin/update-data-menu', {
+                    method: 'PUT',
+                    body: JSON.stringify({
+                        'menu_id' : id,
+                        'nama': nama,
+                        'deskripsi': deskripsi,
+                        'harga': harga,
+                        'tipe' : tipe,
+                        'gambar': gambar
+                    }),
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'authorization' : 'basic '+ localStorage.getItem('auth')
+                    }
+                });
+                console.log(res.statusText);
+
+                const json = await res.json();
+
+                alert('Menu telah diperbaharui !')
+
+                location.assign('list_menu.html')
+
+                return json
+            }
+        }
+// regist section end
+    </script>
+    <!-- script add menu end  -->
+</body>
+
+</html>

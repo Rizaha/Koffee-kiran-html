@@ -1,0 +1,80 @@
+body{
+    margin: 0;
+    padding: 0;
+    background: url(background.jpg);
+}
+
+.flex-container {
+    display: flex;
+    background-color: white;
+    box-shadow: 10px 10px 5px grey;
+    width: 1200px;
+    height: 500px;
+    margin: 50px auto;
+    justify-content: space-between
+}
+
+.flex-left {
+    background-color: white;
+    padding: 10px;
+    flex: 70%;
+  }
+  
+  .flex-right {
+    background-color: white;
+    padding: 10px;
+    flex: 30%;
+  }
+table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+  }
+  
+  td, th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+  }
+  
+  tr:nth-child(even) {
+    background-color: #dddddd;
+  }
+
+.edit{
+    display: block;
+    float: right;
+}
+
+.editselesai{
+    display: none;
+    float: right;
+}
+
+.row3{
+  width: 5%;
+  background: white;
+  border-color: white;
+
+}
+
+.btnedits{
+  display: none;
+}
+
+.editjum{
+  display: none;
+}
+
+displayjum{
+  display: block;
+}
+
+.total{
+  font-size: 30px;
+}
+
+.orderbtn{
+  float: right;
+}
+  

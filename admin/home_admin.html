@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="style_nav_admin.css">
+    <link rel="stylesheet" href="style_home_admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Home</title>
+</head>
+<body>
+    <!-- navbar admin  -->
+    <nav id="navbar"></nav>
+    <script type="text/javascript" src="navbar_admin.js"></script>
+    <!-- script login logout  -->
+    <script type="text/javascript" src="script_login_logout.js"></script>
+
+
+    <menu>
+        <div class="opening">
+            <span>What's Going On Today !</span><hr>
+        </div>
+        <div class="containeratas">
+            <div>
+                <span onclick="location.assign('cek_order.html')">Riwayat Pesanan</span>
+            </div>
+            <div>
+                <span onclick="location.assign('order_masuk.html')">Pesanan Masuk</span>
+            </div>
+        </div>
+        <div class="containerbawah">
+            <div>
+                <span onclick="location.assign('list_menu.html')">Edit Menu</span>
+            </div>
+            <div>
+                <span onclick="location.assign('add_menu.html')">Add Menu</span>
+            </div>
+        </div>
+    </menu>
+
+    <users>
+        <div class="opening">
+            <span >TOP USERS !</span><hr>
+        </div>
+        <div class="containertable">
+            <table id="users">
+                <tr>
+                    <th>ID</th>
+                    <th>Nama</th>
+                    <th>Total Order</th>
+                </tr>
+            </table>
+        </div>
+    </users>
+
+    <script>
+        async function getusers() {
+          const auth = localStorage.getItem('auth')
+          console.log(auth)
+          const url = 'http://127.0.0.1:5000/coffeekiran/top-order';
+          const reslistmenu = await fetch(url, {
+              method: 'GET',
+              headers: {
+                  'Content-Type': 'application/json',
+                  'authorization': 'basic ' + auth
+              }
+          });
+
+          const menu = await reslistmenu.json();
+          console.log(menu)
+
+          if (reslistmenu.ok) {
+              const divlist = document.querySelector('table#users')
+              menu.forEach((item, index) => {
+                  divlist.innerHTML += `<tr>
+                          <td>${item.user_id}</td>
+                          <td>${item.nama}</td>
+                          <td>${item.jumlah_pesanan}</td>
+                          </tr>`;
+              });
+          }
+      }
+      getusers();
+   </script>
+</body>
+
+</html>

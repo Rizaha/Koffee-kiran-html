@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="stylesheet" href="style_nav_admin.css">
+    <link rel="stylesheet" href="style_add_menu.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Menu</title>
+</head>
+
+<body>
+    <!-- navbar admin  -->
+    <nav id="navbar"></nav>
+    <script type="text/javascript" src="navbar_admin.js"></script>
+    <!-- script login logout  -->
+    <script type="text/javascript" src="script_login_logout.js"></script>
+
+    <navmenu>
+        <div class="menu">
+            <span class="labeladd">Tambah Menu <hr></span>
+            <form class="container" id="addmenu" name="addmenu">
+                <label for="fname">Nama menu:</label><br>
+                <input type="text" placeholder="Masukan nama menu.." id="nmenu" name="nmenu" required><br>
+                <label for="lname">Deskripsi :</label><br>
+                <input type="text" placeholder="Masukan deskripsi menu.." id="dmenu" name="dmenu" required><br>
+                <label for="lname">Stok:</label><br>
+                <input type="text" placeholder="Masukan stok menu.." id="smenu" name="smenu" required><br>
+                <label for="lname">Harga:</label><br>
+                <input type="text" placeholder="Masukan harga menu.." id="hmenu" name="hmenu" required><br>
+                <label for="lname">Tipe:</label><br>
+                <input type="text" placeholder="Masukan tipe menu.." id="tmenu" name="tmenu" required><br>
+                <label for="lname">Gambar:</label><br>
+                <input type="text" placeholder="Masukan link gambar menu.." id="gmenu" name="gmenu" required><br><br>
+            </form>
+        </div>
+    </navmenu>
+    <submit type="button" onclick="validasi(); addmenus()">Add !</submit>
+    <!-- nav menu end  -->
+
+    <!-- sript add menu start  -->
+    <script>
+        // regist section start
+        
+        if (localStorage.getItem('auth') == null){
+            location.assign('login.html')
+        }
+
+        function validasi() {
+            const nama =
+                document.forms["addmenu"]["nmenu"];
+            const deskripsi =
+                document.forms["addmenu"]["dmenu"];
+            const stock =
+                document.forms["addmenu"]["smenu"];
+            const harga =
+                document.forms["addmenu"]["hmenu"];
+            const gambar =
+                document.forms["addmenu"]["gmenu"];
+
+            if (nama.value == "") {
+                alert("Please enter menus name.");
+                nama.focus();
+                return false;
+            }
+
+            if (deskripsi.value == "") {
+                alert("Please enter menu's descript");
+                deskripsi.focus();
+                return false;
+            }
+
+            if (stock.value == "") {
+                alert("Please enter menu's stock");
+                stock.focus();
+                return false;
+            }
+
+            if (harga.value == "") {
+                alert("Please enter menu's price");
+                harga.focus();
+                return false;
+            }
+
+            if (gambar.value == "") {
+                alert("Please enter menu's picture");
+                gambar.focus();
+                return false;
+            }
+
+            return true;
+        }
+
+        async function addmenus() {
+            if (validasi() == true) {
+                const nama = document.getElementById('nmenu').value;
+                const deskripsi = document.getElementById('dmenu').value;
+                const stock = document.getElementById('smenu').value;
+                const harga = document.getElementById('hmenu').value;
+                const gambar = document.getElementById('gmenu').value;
+                const type = document.getElementById('tmenu').value;
+
+                console.log(nama, deskripsi, stock, harga, gambar);
+
+                const res = await fetch('http://127.0.0.1:5000/coffeekiran/admin/addmenu', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        'nama': nama,
+                        'deskripsi': deskripsi,
+                        'stok': stock,
+                        'harga': harga,
+                        'tipe' : type,
+                        'gambar': gambar
+                    }),
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'authorization' : 'basic '+ localStorage.getItem('auth')
+                    }
+                });
+                console.log(res.statusText);
+
+                const json = await res.json();
+
+                alert('Menu telah dibuat !')
+
+                return json
+            }
+        }
+
+        function logout(){
+            localStorage.removeItem('auth');
+            localStorage.removeItem('username');
+            location.assign('login.html')
+        }
+// regist section end
+    </script>
+    <!-- script add menu end  -->
+</body>
+
+</html>

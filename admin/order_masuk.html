@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="stylesheet" href="style_nav_admin.css">
+    <link rel="stylesheet" href="style_order_masuk.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Top User</title>
+</head>
+
+<body>
+    <!-- navbar admin  -->
+    <nav id="navbar"></nav>
+    <script type="text/javascript" src="navbar_admin.js"></script>
+    <!-- script login logout  -->
+    <script type="text/javascript" src="script_login_logout.js"></script>
+
+
+    <menu>
+        <span>Pesanan Masuk</span>
+        <table id="tableorder">
+            <tr>
+                <th>Order ID</th>
+                <th>Nama Pemesan</th>
+                <th>Tanggal Pemesanan</th>
+                <th>Konfirmasi</th>
+            </tr>
+        </table>
+    </menu>
+
+    <script>
+        function collaps() {
+            var coll = document.getElementsByClassName("collapsible");
+            var i;
+
+            for (i = 0; i < coll.length; i++) {
+                coll[i].addEventListener("click", function () {
+                });
+            }
+        }
+
+    </script>
+
+    <script>
+        async function allorder() {
+            const auth = localStorage.getItem('auth');
+            const url = "http://127.0.0.1:5000/coffeekiran/admin/pesanan-masuk";
+            const getall = await fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'authorization': 'basic ' + auth
+                }
+            });
+
+            const orders = await getall.json();
+            console.log(orders)
+
+
+
+            if (getall.ok) {
+                const divorders = document.querySelector('table#tableorder')
+                orders.forEach((item, index) => {
+                    divorders.innerHTML += `<tr >
+                            <td class="box1"><button type="button" data-id="${item.order_id}" onclick="givedetail(this)" class="collapsible">${item.order_id}</button>
+                                <div class="content">
+                                    <table class="tablecontent" id="contentorder${item.order_id}">
+                                        <thead>
+                                        <tr>
+                                            <th class="keterangancollaps">Nama Menu</th>
+                                            <th class="keterangancollaps2">Jumlah</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody ></tbody>
+                                    </table>
+                                </div>
+                            </td>
+                            <td class="box2"><button type="button" class="keterangan">${item.nama}</button></td>
+                            <td class="box3"><button type="button" class="keterangan">${item.order_at}</button></td>
+                            <td ><button type="button" id="button${item.order_id}" class="konfirmasi" data-id=${item.order_id} onclick="konfiramsiorder(this)"> Confirmed !</button><td>
+                            </tr>`;
+                });
+                getorders();
+            }
+        }
+
+        function givedetail(params) {
+            const id = params.dataset.id;
+            var content = params.nextElementSibling;
+            const table = content.querySelector('.tablecontent tbody')
+
+            content.classList.toggle("active");
+            if (content.classList.contains("active")) {
+                getorders(id, table);
+            } else {
+                table.innerHTML = "";
+            }
+        }
+
+        async function getorders(params, table) {
+            const auth = localStorage.getItem('auth');
+            const id = params
+            const urls = "http://127.0.0.1:5000/coffeekiran/admin/cek-pesanan";
+            const getorder = await fetch(urls, {
+                method: 'POST',
+                body: JSON.stringify({
+                    'id': id
+                }),
+                headers: {
+                    'Content-Type': 'application/json',
+                    'authorization': 'basic ' + auth
+                }
+            });
+
+            const orderID = await getorder.json();
+            console.log(orderID)
+
+            if (getorder.ok) {
+                const divorders = table
+                orderID.forEach((item, index) => {
+                    divorders.innerHTML += `<tr>
+                                            <td class="keterangancollaps">${item.menu_nama}</td>
+                                            <td class="keterangancollaps2">${item.jumlah}</td>
+                                        </tr>`;
+                });
+
+            }
+        }
+        allorder();
+
+        async function konfiramsiorder(sender) {
+            const id = sender.dataset.id;
+            const auth = localStorage.getItem('auth');
+            const urlcek = "http://127.0.0.1:5000/coffeekiran/admin/ceklis-pesanan?orderID="+id;
+
+            const rescek = await fetch(urlcek, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'authorization': 'basic ' + auth
+                }
+            });
+
+            if (rescek.ok){
+                const json = await rescek.json();
+                
+                alert("Pesanan Sudah Terkonfirmasi")
+                location.reload();
+            }
+        }
+    </script>
+</body>
+
+</html>

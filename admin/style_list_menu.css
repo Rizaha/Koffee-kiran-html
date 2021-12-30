@@ -1,0 +1,44 @@
+list{
+    display: flex;
+    margin: 50px auto;
+    width: 1000px;
+    flex-direction: column;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+menus{
+    display: flex;
+    font-size: 20px;
+    flex-wrap: wrap;
+    margin: 40px;
+}
+
+table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+  
+td, th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+}
+  
+tr:nth-child(even) {
+    background-color: #dddddd;
+}
+
+td img{
+    width: 50px;
+}
+
+.quantity{
+    text-align: right;
+    max-width: 30px;
+}
+
+.des{
+    max-width: 200px;
+}

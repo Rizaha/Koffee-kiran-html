@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link href="style_nav.css" rel="stylesheet">
+    <link rel="stylesheet" href="style_footer.css">
+    <link href="style_keranjang.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Keranjang</title>
+</head>
+
+<body>
+    <!-- navbar section start -->
+    <nav id="navbar"></nav>
+    <script type="text/javascript" src="navbar.js"></script>
+
+    <!-- login modals start -->
+    <nav id="login" class="modal"></nav>
+    <script type="text/javascript" src="navbar_login.js"></script>
+
+    <!-- daftar modal start -->
+    <nav id="daftar" class="modal"></nav>
+    <script type="text/javascript" src="navbar_daftar.js"></script>
+
+    <!-- login-daftar script start -->
+    <script type="text/javascript" src="login_register.js"></script>
+
+
+    <!-- keranjang start  -->
+    <div class="flex-container">
+
+        <div class="flex-left">
+            <span>Keranjang</span>
+            <hr>
+            <table id="tabelpesanan">
+            </table>
+            <br>
+            <br>
+            <button onclick="location.assign('menu.html')">Tambah Menu</button>
+            <button class="edit" id="edit">Edit Menu</button>
+            <button class="editselesai" id="editselesai">Selesai</button>
+        </div>
+
+        <div class="flex-right">
+            <span>Jumlah Harga</span>
+            <hr>
+            <table id="displayharga"></table><br>
+            <span class="total" id="disharga"></span>
+            <br>
+            <br>
+            <button class="orderbtn" id="btnconfirm">Order !</button>
+        </div>
+
+    </div>
+        <script>
+            console.log(getharga())
+            async function getharga() {
+                const auth = localStorage.getItem('auth')
+                console.log(auth)
+                const url = 'http://127.0.0.1:5000/coffeekiran/user/totalharga';
+                const resharga = await fetch(url, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'aplication/json',
+                        'authorization': 'basic ' + auth
+                    }
+                });
+
+                const harga = await resharga.json();
+
+                if (resharga.ok) {
+                    const divharga = document.querySelector('#disharga')
+                    harga.forEach((item, index) => {
+                        divharga.innerHTML += `Total Harga = ${item.harga}`;
+                    });
+                }
+            }
+
+            async function getlist() {
+                const auth = localStorage.getItem('auth')
+                console.log(auth)
+                const url = 'http://127.0.0.1:5000/coffeekiran/user/listharga';
+                const reslistharga = await fetch(url, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'aplication/json',
+                        'authorization': 'basic ' + auth
+                    }
+                });
+
+                const harga = await reslistharga.json();
+                console.log(harga)
+
+                if (reslistharga.ok) {
+                    const divharga = document.querySelector('table#displayharga')
+                    harga.forEach((item, index) => {
+                        divharga.innerHTML += `<tr>
+                            <td>${item.nama_menu} x${item.jumlah}</td>
+                            <td>${item.harga}</td>
+                            </tr>`;
+                    });
+                }
+            }
+            console.log(getlist())
+        </script>
+        <script>
+            if (localStorage.getItem("auth") == null) {
+                document.getElementById('login').style.display = 'block'
+            }
+            function loadData() {
+                const element = document.querySelector("table#tabelpesanan");
+
+                getmenu().then(menus => {
+                    const template = getTemplate(menus);
+
+                    element.innerHTML = template;
+                });
+            }
+
+            async function getmenu() {
+                auth = localStorage.getItem('auth');
+                const url = "http://127.0.0.1:5000/coffeekiran/user/cek-keranjang";
+                const response = await fetch(url, {
+                    method: "GET",
+                    headers: {
+                        'authorization': 'basic ' + auth
+                    }
+                });
+
+                return await response.json();
+            }
+            console.log(getmenu())
+
+            function getTemplate(menus) {
+                const rows = menus.map(menuToRowView).join("");
+
+                return `<tr>
+                <th>Menu</th>
+                <th>Jumlah</th>
+                </tr>
+            ${rows}`;
+            }
+
+            function menuToRowView(menu) {
+                return `<tr><td>${menu.menu_nama}</td>
+                    <td class="displayjum" id="displayjum">${menu.jumlah}</td>
+                    <td class="editjum" id="editjum"><input type="number" id="jum${menu.menu_id}" value="${menu.jumlah}" min="1" max="100"> <button><i class="fa fa-pencil" data-menu_id=${menu.menu_id} onclick="getedit(this)"></button></i></td>
+                    <td class="row3">
+                        <button class="btnedits" data-menu_id=${menu.menu_id} onclick="gethapus(this)" id ="btnedits"><i class="fa fa-trash"></i></button>
+                        </td>
+                        <tr>`;
+            }
+
+            loadData();
+
+            function edits() {
+                var elms = document.querySelectorAll("[id='editjum']");
+                for (var i = 0; i < elms.length; i++)
+                    elms[i].style.display = 'block';
+
+                var elms = document.querySelectorAll("[id='displayjum']");
+                for (var i = 0; i < elms.length; i++)
+                    elms[i].style.display = 'none';
+
+                var elms = document.querySelectorAll("[id='btnedits']");
+                for (var i = 0; i < elms.length; i++)
+                    elms[i].style.display = 'block';
+
+                document.getElementById('edit').style.display = "none";
+                document.getElementById('editselesai').style.display = "block";
+            }
+            function editsdone() {
+                var elms = document.querySelectorAll("[id='editjum']");
+                for (var i = 0; i < elms.length; i++)
+                    elms[i].style.display = 'none';
+
+                var elms = document.querySelectorAll("[id='displayjum']");
+                for (var i = 0; i < elms.length; i++)
+                    elms[i].style.display = 'block';
+
+                var elms = document.querySelectorAll("[id='btnedits']");
+                for (var i = 0; i < elms.length; i++)
+                    elms[i].style.display = 'none';
+
+                document.getElementById('edit').style.display = "block";
+                document.getElementById('editselesai').style.display = "none";
+            }
+
+            async function gethapus(sender) {
+                const id = sender.dataset.menu_id;
+                const auth = localStorage.getItem('auth');
+
+                const reshapus = await fetch('http://127.0.0.1:5000/coffeekiran/user/hapus-pesanan', {
+                    method: 'DELETE',
+                    body: JSON.stringify({
+                        'menu_id': id
+                    }),
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'authorization': 'basic ' + auth
+                    }
+                });
+                const json = await reshapus.json();
+
+                location.reload();
+                edits();
+            }
+
+            async function getedit(sender) {
+                const id = sender.dataset.menu_id;
+                const jumlahBaru = document.getElementById('jum' + id).value;
+                const auth = localStorage.getItem('auth');
+
+                const resupdate = await fetch('http://127.0.0.1:5000/coffeekiran/user/update-keranjang', {
+                    method: 'PUT',
+                    body: JSON.stringify({
+                        'menu_id': id,
+                        'jumlah': jumlahBaru
+                    }),
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'authorization': 'basic ' + auth
+                    }
+                });
+
+                const json = await resupdate.json();
+
+                alert('menu sudah diperbaharui');
+
+                location.reload();
+            }
+
+            async function confirm() {
+                const confirm = await fetch('http://127.0.0.1:5000/coffeekiran/user/confirm-pesanan', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'authorization': 'basic ' + auth
+                    }
+                });
+                if (confirm.ok) {
+                    const json = await confirm.json();
+
+                    alert('Order Complete !')
+                    location.reload()
+                } else {
+                    alert("Maaf Pegawai Sedang Sibuk")
+                }
+            }
+
+            document.getElementById('edit').addEventListener("click", edits);
+            document.getElementById('editselesai').addEventListener("click", editsdone);
+            document.getElementById('btnconfirm').addEventListener("click", confirm);
+
+
+        </script>
+        <!-- footer section-->
+        <footer id="footer"></footer>
+        <script src="footer.js"></script>
+        <script src="https://kit.fontawesome.com/65129717b0.js" crossorigin="anonymous"></script>
+</body>
+
+</html>

@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link href="style_nav.css" rel="stylesheet">
+    <link rel="stylesheet" href="style_footer.css">
+    <link href="style_pesanan.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pesanan Berjalan</title>
+</head>
+
+<body>
+    <!-- navbar section start -->
+    <nav id="navbar"></nav>
+    <script type="text/javascript" src="navbar.js"></script>
+
+    <!-- login modals start -->
+    <nav id="login" class="modal"></nav>
+    <script type="text/javascript" src="navbar_login.js"></script>
+
+    <!-- daftar modal start -->
+    <nav id="daftar" class="modal"></nav>
+    <script type="text/javascript" src="navbar_daftar.js"></script>
+
+    <!-- login-daftar script start -->
+    <script type="text/javascript" src="login_register.js"></script>
+
+
+    <div class="flex-container">
+        <div class="flex-center">
+            <table id="tabelpesanan">
+                <tr>
+                    <td><span>OrderID</span>
+                        <spun>Tanggal Pemesanan</spun>
+                        <spen>Total Harga</spen>
+                        <spin>Status</spin>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        if (localStorage.getItem("auth") == null) {
+            document.getElementById('login').style.display = 'block'
+        }
+    </script>
+
+    <script>
+        function collaps() {
+            var coll = document.getElementsByClassName("collapsible");
+            var i;
+
+            for (i = 0; i < coll.length; i++) {
+                coll[i].addEventListener("click", function () {
+                });
+            }
+        }
+
+    </script>
+
+    <script>
+        async function allorder() {
+            const auth = localStorage.getItem('auth');
+            const url = "http://127.0.0.1:5000/coffeekiran/user/pesanan-berjalan";
+            const getall = await fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'authorization': 'basic ' + auth
+                }
+            });
+
+            const orders = await getall.json();
+            console.log(orders)
+
+
+
+            if (getall.ok) {
+                const divorders = document.querySelector('table#tabelpesanan')
+                orders.forEach((item, index) => {
+                    divorders.innerHTML += `<tr >
+                        <td class="box1"><button type="button" data-id="${item.order_id}" onclick="givedetail(this)" class="collapsible"><i class="fa fa-caret-down"></i><spon class="id">${item.order_id}</spon> <spunt class="tgl">${item.order_at}</spunt> <spen class="total">${item.total}</spen> <spin class="stats">${item.status}</spin> </button> 
+                            <div class="content">
+                                <table class="tablecontent" id="contentorder${item.order_id}">
+                                    <thead>
+                                    <tr>
+                                        <th >Nama Menu</th>
+                                        <th >Jumlah</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody ></tbody>
+                                </table>
+                            </div>
+                        </td>
+                        </tr>`;
+                });
+                getorders();
+            }
+        }
+
+
+        function givedetail(params) {
+            const id = params.dataset.id;
+            var content = params.nextElementSibling;
+            const table = content.querySelector('.tablecontent tbody')
+
+            content.classList.toggle("active");
+            if (content.classList.contains("active")) {
+                getorders(id, table);
+            } else {
+                table.innerHTML = "";
+            }
+        }
+
+        async function getorders(params, table) {
+            const auth = localStorage.getItem('auth');
+            const id = params
+            const urls = "http://127.0.0.1:5000/coffeekiran/user/orders";
+            const getorder = await fetch(urls, {
+                method: 'POST',
+                body: JSON.stringify({
+                    'id': id
+                }),
+                headers: {
+                    'Content-Type': 'application/json',
+                    'authorization': 'basic ' + auth
+                }
+            });
+
+            const orderID = await getorder.json();
+            console.log(orderID)
+
+            if (getorder.ok) {
+                const divorders = table
+                orderID.forEach((item, index) => {
+                    divorders.innerHTML += `<tr>
+                                        <td class="keterangancollaps">${item.menu}</td>
+                                        <td class="keterangancollaps2">${item.jumlah}</td>
+                                    </tr>`;
+                });
+
+            }
+        }
+        allorder();
+
+
+    </script>
+
+
+    <!-- footer section-->
+    <footer id="footer"></footer>
+    <script src="footer.js"></script>
+    <script src="https://kit.fontawesome.com/65129717b0.js" crossorigin="anonymous"></script>
+</body>
+
+</html>

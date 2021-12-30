@@ -1,0 +1,67 @@
+editmenu{
+    display: flex;
+    margin: 50px auto 10px auto;
+    width: 1000px;
+    flex-direction: column;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+editmenu span{
+    margin: 15px;
+}
+
+.container{
+    display: flex;
+    margin: 15px;
+    justify-content: space-evenly;
+}
+
+img{
+    width: 300px;
+}
+
+label{
+    margin: 10px 0;
+    font-size: 20px;
+}
+
+input{
+    margin: 10px 0;
+    width: 70%;
+}
+
+.back{
+    width: 150%;
+}
+
+submit{
+    background-color: rgb(110, 81, 43);
+    color: white;
+    padding: 7px;
+    cursor: pointer;
+    border-radius: 6px;
+}
+
+submit:hover{
+    background-color: grey;
+}
+
+.namamenu{
+    margin: auto;
+    font-size: 30px;
+}
+
+.labeledit{
+    margin: auto;
+    font-size: 40px;
+}
+
+.menulain{
+    float: right;
+    width: 140px;
+    margin-right: 300px;
+    background-color: rgb(201, 201, 201);
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    cursor: pointer;
+}
